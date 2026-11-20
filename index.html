@@ -191,6 +191,11 @@ button.reset:focus-visible{outline:2px solid var(--ink)}
 .agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:20px}
 #ftable{display:block;overflow-x:auto;max-width:100%}
 .fsym{fill:var(--ink)}
+.zv{position:relative;overflow:hidden;touch-action:none;border-radius:3px}
+.zv>.zc{transform-origin:0 0;will-change:transform}
+.zv .zctrl{top:8px;right:8px}
+.zv.zoomed .zc{cursor:grab}
+.zv.dragging .zc{cursor:grabbing}
 </style>
 </head>
 <body>
@@ -583,6 +588,31 @@ coordsCard.innerHTML=`<h3>GPS coordinates (WGS 84)</h3><p class="muted" style="m
 document.getElementById("tl").innerHTML=D.timeline.map(([y,x])=>`<li><b>${y}</b>${x}</li>`).join("");
 applyView();
 overview();
+// ================= Shared zoom/pan for the raster and network maps =================
+function makeZoomable(content,max){max=max||8;
+  const vp=document.createElement("div");vp.className="zv";content.parentNode.insertBefore(vp,content);vp.appendChild(content);content.classList.add("zc");
+  const ctl=document.createElement("div");ctl.className="ctrl zctrl";
+  ctl.innerHTML='<button type="button" aria-label="Zoom in">+</button><button type="button" aria-label="Zoom out">−</button><button type="button" class="txt" aria-label="Fit to view">Fit</button>';
+  vp.appendChild(ctl);
+  let s=1,x=0,y=0,moved=0;const P=new Map();let last=null;
+  function apply(){const w=vp.clientWidth,h=vp.clientHeight;x=Math.min(0,Math.max(w-w*s,x));y=Math.min(0,Math.max(h-h*s,y));
+    content.style.transform=s===1?"":`translate(${x}px,${y}px) scale(${s})`;vp.classList.toggle("zoomed",s>1)}
+  function zoomAt(f,cx,cy){const ns=Math.min(max,Math.max(1,s*f));f=ns/s;x=cx-(cx-x)*f;y=cy-(cy-y)*f;s=ns;apply()}
+  const rel=e=>{const r=vp.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]};
+  vp.addEventListener("wheel",e=>{e.preventDefault();const [cx,cy]=rel(e);zoomAt(Math.exp(-e.deltaY*0.0015),cx,cy)},{passive:false});
+  vp.addEventListener("pointerdown",e=>{if(ctl.contains(e.target))return;P.set(e.pointerId,rel(e));moved=0;last=null});
+  window.addEventListener("pointermove",e=>{if(!P.has(e.pointerId))return;const pt=rel(e),prev=P.get(e.pointerId);P.set(e.pointerId,pt);
+    if(P.size===2){const [a,b]=[...P.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),c=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+      if(last){zoomAt(d/last.d,c[0],c[1]);x+=c[0]-last.c[0];y+=c[1]-last.c[1];apply()}last={d,c};moved+=10}
+    else if(P.size===1&&s>1){const dx=pt[0]-prev[0],dy=pt[1]-prev[1];moved+=Math.abs(dx)+Math.abs(dy);if(moved>4){vp.classList.add("dragging");x+=dx;y+=dy;apply()}}});
+  const up=e=>{P.delete(e.pointerId);last=null;if(!P.size)vp.classList.remove("dragging")};
+  window.addEventListener("pointerup",up);window.addEventListener("pointercancel",up);
+  vp.addEventListener("click",e=>{if(moved>4&&!ctl.contains(e.target)){e.stopPropagation();e.preventDefault();moved=0}},true);
+  const [bi,bo,bf]=ctl.querySelectorAll("button"),mid=()=>[vp.clientWidth/2,vp.clientHeight/2];
+  bi.onclick=()=>zoomAt(1.6,...mid());bo.onclick=()=>zoomAt(1/1.6,...mid());bf.onclick=()=>{s=1;x=0;y=0;apply()};
+  window.addEventListener("resize",apply);
+  return vp._zoom={reset:()=>{s=1;x=0;y=0;apply()}};
+}
 // ================= Land height & ridges tab =================
 (function(){
 const TILE_URL=(window.TERRAIN_TILE_URL)||"https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
@@ -596,6 +626,7 @@ const AREAS=[
  {id:"mossy",name:"Mossy Portages (The Pas Moraine)",note:"Lake Winnipegosis to Cedar Lake",b:[-100.45,52.93,-99.85,53.22],z:11},
 ];
 const cv=document.getElementById("tcanvas"), ctx=cv.getContext("2d",{willReadFrequently:true});
+const tzoom=makeZoomable(cv.parentNode);
 const over=document.getElementById("tover"), status=document.getElementById("tstatus");
 const ro=document.getElementById("treadout"), prof=document.getElementById("profile");
 let S=null, profPts=[], loadToken=0;
@@ -605,7 +636,7 @@ const x2lon=(x,z)=>x/(256*2**z)*360-180;
 const y2lat=(y,z)=>{const n=Math.PI-2*Math.PI*y/(256*2**z);return 180/Math.PI*Math.atan(Math.sinh(n))};
 function loadImg(url){return new Promise((res,rej)=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>res(im);im.onerror=()=>rej(new Error(url));im.src=url})}
 async function load(area){
-  const tok=++loadToken; profPts=[]; prof.innerHTML="";
+  const tok=++loadToken; profPts=[]; prof.innerHTML=""; tzoom.reset();
   status.hidden=false; status.textContent="Loading elevation tiles…";
   const z=area.z, px0=Math.floor(lon2x(area.b[0],z)), px1=Math.ceil(lon2x(area.b[2],z)),
         py0=Math.floor(lat2y(area.b[3],z)), py1=Math.ceil(lat2y(area.b[1],z));
@@ -747,6 +778,7 @@ window.addEventListener("hashchange",fromHash); fromHash();
 // ================= Fur trade network tab =================
 (function(){
 const F=D.fur, NS2="http://www.w3.org/2000/svg", svg=document.getElementById("fsvg");
+const fzoom=makeZoomable(svg);
 const P=F.geo.proj, toXY=(lat,lon)=>[(lon-P.W0)*P.k*P.SC,(P.N0-lat)*P.SC];
 const TYPES={journey:["Journey","#b5651d"],supply:["Supply","#2f6b4f"],correspondence:["Correspondence","#4a6fa5"],trade:["Trade at camps","#a2361f"],administrative:["Administrative","#7a5b8c"]};
 const KIND={post:"square",depot:"bigsquare",camp:"ring",waypoint:"dot",landing:"diamond",settlement:"square"};
@@ -824,7 +856,7 @@ Object.entries(TYPES).forEach(([k,[lab,c]])=>{const b=document.createElement("bu
   b.onclick=()=>{types.has(k)?types.delete(k):types.add(k);b.setAttribute("aria-pressed",types.has(k));refresh()};tbx.appendChild(b)});
 lg.innerHTML=`<span><svg width="12" height="12"><rect x="1" y="1" width="10" height="10" fill="#b5651d"/></svg> HBC post</span><span><svg width="12" height="12"><rect x="1" y="1" width="10" height="10" fill="#6b6b6b"/></svg> NWC post</span><span><svg width="14" height="14"><rect x="1" y="1" width="12" height="12" style="fill:var(--ink)"/></svg> Depot</span><span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="none" stroke="#a2361f" stroke-width="2" stroke-dasharray="3 2"/></svg> Indigenous camps (general area)</span><span><svg width="10" height="10"><circle cx="5" cy="5" r="3.5" style="fill:var(--ink)"/></svg> Waypoint</span>`;
 q.addEventListener("input",refresh); co.addEventListener("change",refresh);
-document.getElementById("flayout").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{layout=b.dataset.l;document.querySelectorAll("#flayout .chip").forEach(c=>c.setAttribute("aria-pressed",c===b));
+document.getElementById("flayout").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{layout=b.dataset.l;fzoom.reset();document.querySelectorAll("#flayout .chip").forEach(c=>c.setAttribute("aria-pressed",c===b));
   document.getElementById("fnote").textContent=layout==="map"?"Lines join places that a journal entry connects. On the map they arc between the places and don't trace the route taken. Dashed rings show how uncertain each position is.":"Network diagram: places are arranged to keep the network readable, roughly north to south, without real distances.";place()});
 // csv
 const csvEsc=v=>{v=String(v??"");return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v};
@@ -869,6 +901,7 @@ const PINS=[
 const $=id=>document.getElementById(id);
 const cv=$("acanvas"),ctx=cv.getContext("2d",{willReadFrequently:true}),sat=$("asat"),sctx=sat.getContext("2d");
 const over=$("aover"),status=$("astatus"),ro=$("areadout"),links=$("alinks");
+const azoom=makeZoomable(cv.parentNode);
 let S=null,tok=0,satTok=0,clickPt=null;
 const lon2x=(lon,z)=>(lon+180)/360*256*2**z;
 const lat2y=(lat,z)=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*256*2**z};
@@ -885,7 +918,7 @@ function mosaic(area,url,z,cors=true){
   return Promise.all(jobs).then(()=>({m,mc,ox:px0-tx0*256,oy:py0-ty0*256,px0,py0,W:px1-px0,H:py1-py0}));
 }
 async function load(area){
-  const t=++tok;clickPt=null;links.innerHTML="";status.hidden=false;status.textContent="Loading elevation tiles…";
+  const t=++tok;clickPt=null;links.innerHTML="";azoom.reset();status.hidden=false;status.textContent="Loading elevation tiles…";
   let M;try{M=await mosaic(area,TILE_URL,area.z)}catch(e){if(t!==tok)return;status.textContent="Elevation tiles couldn't load. This tab fetches open data from Amazon S3, which works on the GitHub Pages version of this map but is blocked in sandboxed previews and when you're offline.";return}
   if(t!==tok)return;
   let rgb;try{rgb=M.mc.getImageData(M.ox,M.oy,M.W,M.H).data}catch(e){status.textContent="The tile server didn't allow reading pixel values (CORS).";return}
