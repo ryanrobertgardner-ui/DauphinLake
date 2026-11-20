@@ -196,6 +196,22 @@ button.reset:focus-visible{outline:2px solid var(--ink)}
 .zv .zctrl{top:8px;right:8px}
 .zv.zoomed .zc{cursor:grab}
 .zv.dragging .zc{cursor:grabbing}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.fcard{display:flex;flex-direction:column}
+.fcard .fpic{background:var(--land);border-radius:4px;padding:6px;margin-bottom:8px}
+.fcard .fpic svg{width:100%;height:auto;display:block}
+.fcard ul{margin:2px 0 6px;padding-left:18px;font-size:14px}
+.fcard p{margin:2px 0 6px;font-size:14px}
+.fcard .flabel{font:600 11px var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:8px 0 2px}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.wcard{display:flex;flex-direction:column}
+.wpic{background:#f3efe6;border-radius:4px;margin-bottom:8px}
+.wpic svg{width:100%;height:auto;display:block}
+.card h3.wname{font:600 16px var(--display);letter-spacing:0;text-transform:none;color:var(--ink);margin:0 0 2px}
+.wcard ul{margin:0 0 8px;padding-left:18px;font-size:14px}
+.wnot{font-size:13px;color:var(--muted);margin:0 0 10px}
+.wrep{margin-top:auto;align-self:flex-start;font:500 13px var(--body);background:var(--bg);color:var(--ink);border:1px solid var(--rule);border-radius:5px;padding:5px 10px;cursor:pointer}
+.wrep:hover{border-color:var(--route)}
 </style>
 </head>
 <body>
@@ -209,6 +225,8 @@ button.reset:focus-visible{outline:2px solid var(--ink)}
   <button role="tab" id="tb-terrain" aria-controls="tab-terrain" aria-selected="false">Land height &amp; ridges</button>
   <button role="tab" id="tb-fur" aria-controls="tab-fur" aria-selected="false">Fur trade network 1819–21</button>
   <button role="tab" id="tb-agassiz" aria-controls="tab-agassiz" aria-selected="false">Lake Agassiz shorelines</button>
+  <button role="tab" id="tb-finds" aria-controls="tab-finds" aria-selected="false">What's been found here</button>
+  <button role="tab" id="tb-whatis" aria-controls="tab-whatis" aria-selected="false">What is it?</button>
   <button role="tab" id="tb-found" aria-controls="tab-found" aria-selected="false">Found something?</button>
 </nav>
 <section id="tab-routes" role="tabpanel" aria-labelledby="tb-routes">
@@ -386,6 +404,53 @@ button.reset:focus-visible{outline:2px solid var(--ink)}
     <p>Beach ridges were camping places and travel routes for thousands of years, so they are sensitive heritage landscapes. The ridge candidates are landforms, not sites. Searching for or collecting artifacts in Manitoba needs a heritage permit, most ridges are private farmland, and nothing may be removed from Riding Mountain National Park.</p>
     <p class="src">Elevation: Terrain Tiles on AWS Open Data (Mapzen/Tilezen). Contains information licensed under the Open Government Licence – Canada (CDEM). Satellite image: Sentinel-2 cloudless 2016 by EOX IT Services GmbH (contains modified Copernicus Sentinel data 2016), CC BY 4.0. Google Earth and Google Maps links open Google's own imagery on Google's site. Like the land-height tab, this tab loads data live and works on GitHub Pages or any web server, but not in sandboxed previews that block outside data.</p>
   </div>
+</div>
+</section>
+<section id="tab-finds" role="tabpanel" aria-labelledby="tb-finds" hidden>
+<p class="lede" style="max-width:860px">These are the kinds of artifacts and fossils that turn up most often around Dauphin Lake, Riding Mountain and Lake Winnipegosis, and how to tell them from ordinary rocks and bones. Use it to recognise what you've come across, then report it.</p>
+<div class="card" style="border-left:4px solid var(--portage);max-width:1180px;margin-bottom:16px">
+  <p style="margin:0;font-size:14px"><b>Look, photograph, report; don't dig or keep.</b> In Manitoba, fossils are heritage objects just like arrowheads and pottery. Under The Heritage Resources Act, artifacts found since 1986 belong to the Province, and a heritage permit is needed to search for or collect heritage objects. If you find something, leave it in place and use the <a href="#found">Found something?</a> tab to send photos and the location.</p>
+</div>
+<div class="chips" id="fgroups" role="group" aria-label="Show" style="margin-bottom:12px">
+  <button class="chip" type="button" aria-pressed="true" data-g="">Everything</button>
+  <button class="chip" type="button" aria-pressed="false" data-g="art">Indigenous artifacts</button>
+  <button class="chip" type="button" aria-pressed="false" data-g="trade">Fur-trade goods</button>
+  <button class="chip" type="button" aria-pressed="false" data-g="fossil">Fossils</button>
+</div>
+<div id="fcards" class="fgrid"></div>
+<div class="agrid">
+  <div class="card">
+    <h3>Get a find identified</h3>
+    <p style="font-size:14px;margin-top:0"><b>Artifacts:</b> Historic Resources Branch, hrb.archaeology@gov.mb.ca, (204) 945-2118. Locally, the Fort Dauphin Museum in Dauphin.<br><b>Fossils:</b> the Manitoba Museum in Winnipeg (palaeontology and geology), or the Canadian Fossil Discovery Centre in Morden for marine reptiles and sharks.</p>
+  </div>
+  <div class="card">
+    <h3>See real examples</h3>
+    <ul style="margin:0;padding-left:18px;font-size:14px">
+      <li><a href="https://manitobaarchaeologicalsociety.ca/sites/default/files/page/pdf/pottery-aug-2016.pdf" target="_blank" rel="noopener">Manitoba pottery, by Leo Pettipas</a> (Manitoba Archaeological Society)</li>
+      <li><a href="https://manitobamuseum.ca/collections-research/manitoba-nature/palaeontology-geology" target="_blank" rel="noopener">Manitoba Museum: palaeontology and geology</a></li>
+      <li><a href="https://manitobamuseum.ca/the-fossils-surround-us/" target="_blank" rel="noopener">Fossils in Tyndall Stone buildings</a> (Manitoba Museum)</li>
+      <li><a href="https://uregina.ca/science/earth-sciences/assets/pdfs/sask-rock-fossil-recog-guide-3rd-ed.pdf" target="_blank" rel="noopener">Guide to common rocks and fossils</a> (University of Regina; the same fossil types occur in Manitoba)</li>
+    </ul>
+  </div>
+  <div class="card note">
+    <h3>Sources and notes</h3>
+    <p class="src" style="margin-top:0">The drawings are simplified illustrations made for this map, not photographs of particular finds. Sources: Manitoba Historic Resources Branch, <i>Heritage Objects</i> and permit pages; Provincial Heritage Site No. 6 (Wanipigow Lake: Laurel, Blackduck, Selkirk); Pettipas, <i>Pottery</i> (MAS 2016); Canadian Journal of Archaeology 22(1) on Duck Bay ware; Kehoe, <i>The Small Side-Notched Point System of the Northern Plains</i>; Karklins, bead studies of Manitoba posts; Stearn and others on Manitoba Devonian stromatoporoids; USGS Geolex on the Winnipegosis Formation; Manitoba Geological Survey on the escarpment's Cretaceous shale; Manitoba Heritage Council plaques on fossil elephants and extinct bison; Manitoba Museum on the giant beaver find.</p>
+  </div>
+</div>
+</section>
+
+<section id="tab-whatis" role="tabpanel" aria-labelledby="tb-whatis" hidden>
+<p class="lede" style="max-width:860px">A guide to the kinds of artifacts and fossils that turn up in the Dauphin Lake and Parkland region, and the features that tell them apart from ordinary rocks. The drawings are simplified illustrations made for this map, not photos of real finds. Use this guide to recognize what you've already come across, not to go looking: in Manitoba, artifacts and fossils are protected heritage objects, and searching for them needs a permit.</p>
+<div class="card" style="border-left:4px solid var(--portage);max-width:860px;margin-bottom:14px">
+  <p style="margin:0;font-size:14px"><b>If you find something: leave it where it is,</b> take photos with something for scale, and record the location. Then use the <a href="#found">Found something?</a> tab to send a report to the Historic Resources Branch. Where an object lies is often worth more to science than the object itself. Collecting, digging or metal detecting without a heritage permit is not allowed. Possible human remains: stop, and call the RCMP and the Branch at (204) 945-2118.</p>
+</div>
+<div class="chips" id="wchips" role="group" aria-label="Show" style="margin-bottom:12px"></div>
+<div class="wgrid" id="wgrid"></div>
+<div class="card note" style="margin-top:18px;max-width:860px">
+  <h3>Sources and further help</h3>
+  <p>Heritage law: Manitoba Historic Resources Branch, <em>Heritage Objects</em> and its permit pages, which define heritage objects to include archaeological items such as pottery, arrowheads and stone and bone tools, and palaeontological specimens. The Manitoba Museum (G. Young, <em>Secrets in Stone</em>, 2022) also reminds fossil hunters that Manitoba's heritage laws protect fossils.</p>
+  <p>Regional material: Swan River chert as a common tool stone in west-central Manitoba (Canadian Archaeological Association abstracts); Laurel, Blackduck, Selkirk and Duck Bay pottery (Pettipas, Manitoba Archaeological Society; HRB Provincial Heritage Site No. 6); Ordovician–Devonian limestone fossils (Manitoba Museum); Cretaceous marine fossils of the Manitoba Escarpment (Manitoba Geological Survey; The Canadian Encyclopedia).</p>
+  <p>For identification help: the Fort Dauphin Museum's Parkland Archaeological Laboratory, the Manitoba Museum, the Canadian Fossil Discovery Centre in Morden, and the Manitoba Archaeological Society.</p>
 </div>
 </section>
 <section id="tab-found" role="tabpanel" aria-labelledby="tb-found" hidden>
@@ -761,7 +826,7 @@ const box=document.getElementById("areas");
 AREAS.forEach(a=>{const b=document.createElement("button");b.type="button";b.setAttribute("aria-pressed","false");b.innerHTML=`${a.name}<small>${a.note}</small>`;
   b.onclick=()=>{box.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");load(a)};box.appendChild(b)});
 // tabs
-const tabs={routes:[document.getElementById("tb-routes"),document.getElementById("tab-routes")],terrain:[document.getElementById("tb-terrain"),document.getElementById("tab-terrain")],fur:[document.getElementById("tb-fur"),document.getElementById("tab-fur")],agassiz:[document.getElementById("tb-agassiz"),document.getElementById("tab-agassiz")],found:[document.getElementById("tb-found"),document.getElementById("tab-found")]};
+const tabs={routes:[document.getElementById("tb-routes"),document.getElementById("tab-routes")],terrain:[document.getElementById("tb-terrain"),document.getElementById("tab-terrain")],fur:[document.getElementById("tb-fur"),document.getElementById("tab-fur")],agassiz:[document.getElementById("tb-agassiz"),document.getElementById("tab-agassiz")],finds:[document.getElementById("tb-finds"),document.getElementById("tab-finds")],whatis:[document.getElementById("tb-whatis"),document.getElementById("tab-whatis")],found:[document.getElementById("tb-found"),document.getElementById("tab-found")]};
 let started=false;
 function showTab(name){if(!tabs[name])name="routes";for(const k in tabs){const on=k===name;tabs[k][0].setAttribute("aria-selected",on);tabs[k][0].tabIndex=on?0:-1;tabs[k][1].hidden=!on}
   if(name==="terrain"&&!started){started=true;box.querySelector("button:nth-child(2)").click()}
@@ -1083,6 +1148,218 @@ $("fdl1").onclick=e=>{e.preventDefault();if(check(true))download(true)};
 $("fmail1").onclick=e=>{e.preventDefault();if(check(true))mail(HRB,true)};
 $("fdl2").onclick=e=>{e.preventDefault();if(check(false))download(false)};
 $("fmail2").onclick=e=>{e.preventDefault();if(!check(false))return;if(REVIEWER.includes("@"))mail(REVIEWER,false);else $("fmsg").textContent="The reviewer's email hasn't been set up on this copy of the map yet. Send the report to the Branch instead."};
+})();
+// ================= What's been found here (identification guide) =================
+(function(){
+const S='stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linejoin="round" stroke-linecap="round"';
+const T=(x,y,s,a)=>`<text x="${x}" y="${y}" font-size="9" fill="var(--muted)" font-family="IBM Plex Sans,sans-serif"${a?` text-anchor="${a}"`:""}>${s}</text>`;
+const L=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--muted)" stroke-width=".8" stroke-dasharray="2 2"/>`;
+const scars=(cx,cy,n,w,h)=>{let o="";for(let i=0;i<n;i++){const y=cy-h/2+(i+.5)*h/n;o+=`<path d="M${cx-w/2} ${y} q${w/4} -5 ${w/2} 0 M${cx} ${y} q${w/4} 5 ${w/2} 0" stroke="var(--ink)" stroke-width=".7" fill="none" opacity=".55"/>`}return o};
+const STONE='fill="#c9b79a" fill-opacity=".55"';
+const ART={
+points:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawings of three projectile point styles">
+ <path d="M40 12 L58 70 L54 76 L58 84 L52 96 L28 96 L22 84 L26 76 L22 70 Z" ${STONE} ${S}/>${scars(40,52,6,26,60)}
+ <path d="M110 30 L124 82 L120 86 L123 92 L97 92 L100 86 L96 82 Z" ${STONE} ${S}/>${scars(110,60,4,20,44)}
+ <path d="M175 40 L186 86 L183 89 L186 93 L164 93 L167 89 L164 86 Z" ${STONE} ${S}/>${scars(175,66,3,16,36)}
+ ${T(40,108,"older dart points","middle")}${T(40,119,"(Oxbow, McKean,","middle")}${T(40,129,"Pelican Lake)","middle")}${T(110,106,"Besant","middle")}${T(175,106,"small side-notched","middle")}${T(175,117,"arrowhead","middle")}${T(205,24,"notches","middle")}${L(196,28,184,86)}</svg>`,
+scraper:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawing of an end scraper and a flake">
+ <path d="M30 100 Q28 40 60 22 Q92 40 90 100 Z" ${STONE} ${S}/>${[0,1,2,3,4,5,6].map(i=>`<path d="M${36+i*7.5} ${46-Math.sin(i/6*Math.PI)*16} l2 9" stroke="var(--ink)" stroke-width=".9"/>`).join("")}
+ ${L(60,24,72,16)}${T(76,12,"steep, retouched working edge")}
+ <path d="M140 60 L190 48 L200 92 L150 104 Z" ${STONE} ${S}/><circle cx="146" cy="78" r="5" ${S}/><path d="M152 76 q20 -6 40 0 M152 84 q20 -4 42 2" stroke="var(--ink)" stroke-width=".7" fill="none" opacity=".6"/>
+ ${L(146,84,160,112)}${T(176,122,"bulb of percussion","middle")}${T(60,116,"end scraper","middle")}${T(172,40,"flake","middle")}</svg>`,
+pottery:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawing of a pottery rim sherd with cord marks and punctates">
+ <path d="M20 30 L150 22 L158 108 L28 116 Z" fill="#a8846a" fill-opacity=".45" ${S}/>
+ <path d="M20 30 L150 22" stroke="var(--ink)" stroke-width="3"/>${[0,1,2,3,4,5,6,7,8].map(i=>`<circle cx="${30+i*14}" cy="${44-i*.8}" r="2.6" fill="var(--ink)"/>`).join("")}
+ ${[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>`<line x1="${32+i*10}" y1="${58}" x2="${26+i*10}" y2="${110}" stroke="var(--ink)" stroke-width=".8" opacity=".55"/>`).join("")}
+ ${[0,1,2,3,4,5,6,7,8,9,10,11,12,13].map(i=>`<line x1="${22+i*9.3}" y1="${30-i*.6}" x2="${25+i*9.3}" y2="${25-i*.6}" stroke="var(--ink)" stroke-width="1"/>`).join("")}
+ ${L(150,24,166,24)}${T(168,27,"notched lip")}${L(140,40,166,48)}${T(168,51,"punctates")}${L(130,90,166,92)}${T(168,95,"cord marks")}</svg>`,
+fcr:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawing of fire-cracked rock fragments and charcoal">
+ <path d="M30 70 L60 50 L84 64 L70 96 L36 94 Z" fill="#b9a59a" fill-opacity=".5" ${S}/><path d="M60 50 L66 74 L84 64" stroke="var(--ink)" stroke-width=".9" fill="none"/>
+ <path d="M100 60 L134 44 L150 76 L120 98 Z" fill="#c48f7a" fill-opacity=".45" ${S}/><path d="M112 64 l12 -4 M118 76 l14 4 M128 90 l6 -10" stroke="var(--ink)" stroke-width=".7"/>
+ <path d="M165 82 L190 70 L200 96 L174 104 Z" fill="#b9a59a" fill-opacity=".5" ${S}/>
+ ${[0,1,2,3,4,5].map(i=>`<rect x="${40+i*24}" y="${110+(i%2)*3}" width="7" height="4" fill="var(--ink)"/>`).join("")}
+ ${T(110,30,"sharp, angular breaks; reddened or greyed","middle")}${T(110,40,"crazed surface from heating","middle")}${T(110,126,"charcoal flecks","middle")}</svg>`,
+bone:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawing of a bone awl and a cut-marked bison bone">
+ <path d="M20 60 Q24 50 40 52 L120 60 L160 64 L122 66 L40 70 Q22 72 20 60 Z" fill="#e8dfc8" ${S}/>${L(160,64,170,48)}${T(170,42,"polished, ground tip","middle")}
+ <path d="M30 100 Q40 88 60 94 L150 94 Q170 88 180 100 Q170 114 150 108 L60 108 Q40 114 30 100 Z" fill="#e8dfc8" ${S}/>
+ ${[0,1,2,3].map(i=>`<line x1="${90+i*6}" y1="${96}" x2="${96+i*6}" y2="${106}" stroke="var(--ink)" stroke-width=".9"/>`).join("")}${L(100,108,110,124)}${T(112,125,"thin parallel cut marks")}${T(70,40,"awl","middle")}</svg>`,
+ground:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawing of a grooved maul and a hammerstone">
+ <ellipse cx="70" cy="68" rx="42" ry="30" fill="#b7b4a8" fill-opacity=".6" ${S}/><path d="M66 38 Q60 68 66 98 M76 38 Q70 68 76 98" stroke="var(--ink)" stroke-width="1.2" fill="none"/>
+ ${L(72,40,92,18)}${T(94,18,"pecked groove for a handle")}
+ <ellipse cx="165" cy="76" rx="30" ry="24" fill="#c9c3b2" fill-opacity=".6" ${S}/>${[0,1,2,3,4,5,6,7].map(i=>`<circle cx="${190+Math.cos(i)*3}" cy="${70+i*2}" r=".9" fill="var(--ink)"/>`).join("")}
+ ${L(194,76,206,104)}${T(160,116,"battered, pitted end","middle")}${T(70,112,"grooved maul","middle")}</svg>`,
+trade:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawings of glass trade beads, a gunflint, a musket ball and a clay pipe stem">
+ ${[["#2f5fa8",22],["#f0eee8",38],["#a8322b",54],["#2f5fa8",70],["#ffffff",86]].map(([c,x])=>`<circle cx="${x}" cy="40" r="6" fill="${c}" stroke="var(--ink)" stroke-width="1"/><circle cx="${x}" cy="40" r="1.6" fill="var(--panel)"/>`).join("")}
+ ${T(54,60,"glass trade beads","middle")}
+ <path d="M120 30 L170 30 L176 52 L114 52 Z" fill="#c79b4b" fill-opacity=".55" ${S}/><path d="M120 30 L124 52 M166 30 L170 52" stroke="var(--ink)" stroke-width=".8"/>${T(145,66,"gunflint","middle")}
+ <circle cx="30" cy="98" r="9" fill="#8d9298" ${S}/>${T(30,122,"lead ball","middle")}
+ <rect x="90" y="94" width="96" height="9" rx="4" fill="#f2efe6" ${S}/><circle cx="100" cy="98.5" r="1.6" fill="var(--ink)"/>${T(138,122,"clay pipe stem","middle")}</svg>`,
+devonian:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawings of a stromatoporoid, colonial coral and a brachiopod">
+ <path d="M14 100 Q50 30 90 100 Z" fill="#c9b79a" fill-opacity=".5" ${S}/>${[0,1,2,3,4].map(i=>`<path d="M${22+i*6} 100 Q50 ${44+i*12} ${82-i*6} 100" stroke="var(--ink)" stroke-width=".7" fill="none"/>`).join("")}${T(52,114,"stromatoporoid","middle")}${T(52,124,"(wavy layers)","middle")}
+ ${[0,1,2,3,4,5,6,7,8].map(i=>{const x=106+(i%3)*14,y=40+Math.floor(i/3)*14;return `<polygon points="${x},${y-6} ${x+6},${y-3} ${x+6},${y+3} ${x},${y+6} ${x-6},${y+3} ${x-6},${y-3}" ${S} fill="#d8cbb2" fill-opacity=".5"/>`}).join("")}${T(130,94,"colonial coral","middle")}
+ <path d="M168 46 Q196 40 204 70 Q196 100 168 96 Q150 70 168 46 Z" fill="#d6c7a8" fill-opacity=".55" ${S}/>${[0,1,2,3,4,5].map(i=>`<path d="M172 70 L${200} ${48+i*9}" stroke="var(--ink)" stroke-width=".6"/>`).join("")}${T(186,116,"brachiopod","middle")}</svg>`,
+pebble:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawings of a horn coral, crinoid stem pieces and a fossil in a beach pebble">
+ <path d="M20 40 Q40 30 70 36 L50 100 Q36 92 20 40 Z" fill="#d6c7a8" fill-opacity=".55" ${S}/>${[0,1,2,3,4].map(i=>`<path d="M${24+i*2} ${46+i*12} Q45 ${40+i*12} ${66-i*3} ${42+i*12}" stroke="var(--ink)" stroke-width=".6" fill="none"/>`).join("")}${T(46,118,"horn coral","middle")}
+ ${[0,1,2,3].map(i=>`<g transform="translate(${100+i*18} ${60})"><ellipse rx="8" ry="8" fill="#d8cbb2" ${S}/><circle r="2" fill="var(--ink)"/>${[0,1,2,3,4].map(k=>`<line x1="0" y1="0" x2="${Math.cos(k*1.256)*7}" y2="${Math.sin(k*1.256)*7}" stroke="var(--ink)" stroke-width=".5"/>`).join("")}</g>`).join("")}${T(127,86,"crinoid stems","middle")}${T(127,96,"(discs, centre hole)","middle")}
+ <ellipse cx="200" cy="40" rx="22" ry="16" fill="#cfc6b5" ${S}/><path d="M190 36 q10 -8 20 0 q-10 8 -20 0" stroke="var(--ink)" stroke-width=".8" fill="none"/>${T(200,70,"fossil in a","middle")}${T(200,80,"limestone pebble","middle")}</svg>`,
+cretaceous:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawings of a shark tooth, a fish vertebra and a marine reptile vertebra">
+ <path d="M30 90 L44 30 L58 90 Q44 96 30 90 Z" fill="#555" fill-opacity=".55" ${S}/><path d="M26 92 Q44 100 62 92" ${S}/>${T(44,112,"shark tooth","middle")}
+ <circle cx="105" cy="62" r="18" fill="#6b625a" fill-opacity=".45" ${S}/><circle cx="105" cy="62" r="11" ${S}/><circle cx="105" cy="62" r="4" ${S}/>${T(105,98,"fish vertebra","middle")}
+ <path d="M172 46 L208 46 L210 80 L170 80 Z" fill="#6b625a" fill-opacity=".45" ${S}/><path d="M182 46 L190 22 L198 46" ${S}/><path d="M170 60 L160 56 M210 60 L220 56" ${S}/>${T(190,98,"marine reptile","middle")}${T(190,108,"vertebra","middle")}
+ ${T(120,14,"in dark grey to black shale","middle")}</svg>`,
+iceage:`<svg viewBox="0 0 240 132" role="img" aria-label="Drawings of a mammoth molar, a bison horn core and a giant beaver incisor">
+ <rect x="18" y="40" width="66" height="44" rx="10" fill="#e3d9bf" ${S}/>${[0,1,2,3,4,5,6,7,8,9].map(i=>`<path d="M${24+i*6} 44 q3 20 0 36" stroke="var(--ink)" stroke-width=".9" fill="none"/>`).join("")}${T(51,100,"mammoth molar","middle")}
+ <path d="M110 80 Q118 36 160 30 Q130 46 126 84 Z" fill="#e3d9bf" ${S}/><path d="M116 78 Q124 44 152 34" stroke="var(--ink)" stroke-width=".6" fill="none"/>${T(132,100,"bison horn core","middle")}
+ <path d="M196 30 Q222 60 208 100 L198 98 Q208 62 188 34 Z" fill="#d79a3f" fill-opacity=".6" ${S}/>${T(204,116,"giant beaver","middle")}${T(204,126,"tooth","middle")}</svg>`,
+};
+const FINDS=[
+ {g:"art",k:"points",t:"Projectile points: dart points and arrowheads",age:"About 5,000 years ago to the 1800s",
+  look:["Thin and symmetrical, with small flake scars over both faces.","Notches near the base where it was tied to a shaft. Big notched points (Oxbow, McKean, Pelican Lake, Besant) are older dart points thrown with a spear-thrower. Small side-notched points are arrowheads, mostly from the last 1,300 years.","Stone types: local Swan River chert (grey to white, from glacial gravels), quartzite, and brown see-through Knife River flint traded in from North Dakota."],
+  con:"Frost-split or plow-broken rocks can have a sharp edge, but they don't have scars on both faces or regular notches.",
+  where:"Plowed fields, eroding lake and river banks, and blowouts on sandy beach ridges."},
+ {g:"art",k:"scraper",t:"Scrapers, knives and flakes",age:"Every period; the most common stone artifacts",
+  look:["Flakes: thin chips with a smooth inner face, and a small bump (the bulb of percussion) where the hammer struck.","End scrapers: thumb-sized, with one steep, finely chipped edge used to clean hides.","Many small flakes together means someone made or sharpened tools on that spot."],
+  con:"Gravel crushers and road graders make broken stone. Natural breaks lack a striking platform and bulb.",
+  where:"Anywhere people camped: river mouths, lakeshores, portages."},
+ {g:"art",k:"pottery",t:"Pottery sherds",age:"About 2,000 to 300 years ago",
+  look:["Brownish-grey, gritty clay with crushed rock in it; the inside is often blackened.","Surfaces marked with cord or woven fabric, often with a row of round dents (punctates) below a notched rim.","Laurel is the oldest pottery in Manitoba. Later wares are Blackduck, Selkirk (linked to the Cree) and Duck Bay ware, which is best known from Lakes Winnipegosis and Manitoba."],
+  con:"Modern flowerpots and dishes are smooth, wheel-made, often glazed, and have no grit.",
+  where:"Lakeshores and river mouths, especially around Lake Winnipegosis and Lake Manitoba."},
+ {g:"art",k:"fcr",t:"Fire-cracked rock and hearths",age:"Every period",
+  look:["Fist-sized stones broken into angular chunks, reddened, greyed or finely crazed by heat. They were heated to boil water or roast food.","Dark, greasy soil with charcoal flecks, sometimes with burnt bone, showing in a bank or a fresh cut."],
+  con:"Field-stone piles and old farm burn piles.",
+  where:"Cutbanks along rivers and lakes, and new ditches or construction cuts."},
+ {g:"art",k:"bone",t:"Bone and antler tools; butchered bison bone",age:"Mostly the last few thousand years",
+  look:["Awls and needles ground to a polished point, and flat fleshing tools.","Bison bones with fine, parallel cut marks or spiral breaks from marrow cracking."],
+  con:"Most bones people bring to the Manitoba Museum turn out to be from farm animals. Cattle and horse bones are common in fields and ditches.",
+  where:"Riverbanks, lake margins and eroding banks."},
+ {g:"art",k:"ground",t:"Ground and pecked stone: hammerstones and mauls",age:"Thousands of years old to the 1800s",
+  look:["Round cobbles with one battered, pitted end.","Mauls with a pecked groove all the way around for a handle."],
+  con:"Glacial cobbles are often rounded but have no groove or battering.",
+  where:"Fields and shorelines; mauls are often turned up by plows."},
+ {g:"trade",k:"trade",t:"Fur-trade goods",age:"Mostly the 1700s and 1800s",
+  look:["Glass trade beads, mostly tiny drawn \"seed\" beads in white, blue, red or black, plus some larger wound beads.","Gunflints: small square flints with a bevelled edge, honey-coloured (French) or grey to black (English).","Lead balls and shot, brass kettle scraps, iron trade-axe heads, and white clay pipe stems with a hole through the centre."],
+  con:"Modern beads (plastic or very uniform), slag, and 1900s farm hardware.",
+  where:"Near old post sites and along the water routes on this map."},
+ {g:"fossil",k:"devonian",t:"Devonian reef fossils",age:"About 385 million years old",
+  look:["Stromatoporoids: domes or sheets of thin wavy layers. These were reef-building sponges.","Colonial corals with honeycomb-like cells, and ribbed brachiopod shells.","Pale grey to buff limestone and dolomite."],
+  con:"Layered banding in ordinary rock, or concretions.",
+  where:"The bedrock shores and islands of Lake Winnipegosis and Lake Manitoba, where the Winnipegosis Formation's ancient reefs are exposed."},
+ {g:"fossil",k:"pebble",t:"Fossils in beach and gravel pebbles",age:"About 380 to 450 million years old",
+  look:["Glaciers broke up limestone bedrock and spread it through the gravels, including the Lake Agassiz beach ridges.","Horn corals shaped like a small cone with radiating partitions, crinoid stem discs with a centre hole, brachiopods and snails in buff limestone pebbles.","The same Ordovician fossils show in Tyndall Stone on many Manitoba buildings."],
+  con:"Rounded holes or swirls caused by weathering.",
+  where:"Gravel beaches, beach ridges, gravel roads and driveways."},
+ {g:"fossil",k:"cretaceous",t:"Cretaceous sea fossils in the escarpment shale",age:"About 75 to 125 million years old",
+  look:["Dark grey to black shale on Riding and Duck mountains and the Manitoba Escarpment, with pale bentonite (sticky volcanic ash clay) layers.","Shark teeth, fish bones and vertebrae, and much rarer bones of marine reptiles (mosasaurs, plesiosaurs) and diving birds.","Most of Manitoba's marine reptile fossils come from the Pembina Member of the Pierre Shale. The best-known finds, such as Bruce the mosasaur, are from near Morden, farther south along the escarpment."],
+  con:"Iron-stained concretions, and lumps of gypsum crystals.",
+  where:"Creek cuts and slumps on the escarpment slopes. In Riding Mountain National Park, everything is protected."},
+ {g:"fossil",k:"iceage",t:"Ice-age mammals",age:"About 10,000 to 50,000 years old",
+  look:["Mammoth and mastodon teeth, bones and tusk pieces have turned up at more than a dozen places in Manitoba, mostly in gravel quarries.","Bones of ancient bison, larger than modern bison, and rarely giant beaver.","These bones are heavy and stained brown, and often broken."],
+  con:"Cattle and horse bones, and modern bison.",
+  where:"Gravel pits and eroding riverbanks."},
+];
+const box=document.getElementById("fcards");
+function render(g){box.innerHTML="";FINDS.filter(f=>!g||f.g===g).forEach(f=>{const d=document.createElement("article");d.className="card fcard";
+  d.innerHTML=`<div class="fpic">${ART[f.k]}</div><span class="pill" style="color:${f.g==="fossil"?"var(--fn)":f.g==="trade"?"var(--route)":"var(--portage)"}">${f.g==="fossil"?"Fossil":f.g==="trade"?"Fur trade":"Indigenous artifact"} · ${f.age}</span><h3 style="margin:6px 0 4px;text-transform:none;letter-spacing:0;font:600 17px var(--display);color:var(--ink)">${f.t}</h3>
+   <p class="flabel">What to look for</p><ul>${f.look.map(x=>`<li>${x}</li>`).join("")}</ul>
+   <p class="flabel">Easily confused with</p><p>${f.con}</p><p class="flabel">Where it turns up</p><p>${f.where}</p>`;box.appendChild(d)})}
+const chips=document.querySelectorAll("#fgroups .chip");
+chips.forEach(c=>c.onclick=()=>{chips.forEach(x=>x.setAttribute("aria-pressed",x===c));render(c.dataset.g)});
+render("");
+})();
+// ================= What is it? identification guide =================
+(function(){
+const ST="#b6a68f",ST2="#8f7f69",DK="#5b4d3c",CH="#c9a77a",RD="#b4553a",CU="#c47a3c",BN="#e6dcc4",SH="#9c9a94";
+const S=(b)=>`<svg viewBox="-12 0 144 94" role="img" aria-hidden="true">${b.replace(/<text x="\d+" y="(\d+)"/g,(m,y)=>+y>=70&&!b.includes(">notches<")?`<text x="60" y="${y}" text-anchor="middle"`:m)}</svg>`;
+const PICS={
+point:S(`<path d="M60 6 L79 58 L73 61 L71 68 L77 72 L70 84 L50 84 L43 72 L49 68 L47 61 L41 58 Z" fill="${CH}" stroke="${DK}" stroke-width="1.5"/><path d="M60 14 L54 30 M60 14 L66 30 M52 38 L60 46 L68 38 M48 50 L56 56 M72 50 L64 56 M56 76 L64 76" stroke="${DK}" stroke-width=".8" fill="none" opacity=".6"/><text x="86" y="80" font-size="8" fill="${DK}">notches</text><path d="M85 76 L76 70" stroke="${DK}" stroke-width=".7"/>`),
+scraper:S(`<path d="M44 12 Q60 4 76 12 L84 54 Q60 84 36 54 Z" fill="${CH}" stroke="${DK}" stroke-width="1.5"/>${Array.from({length:9},(_,i)=>{const a=Math.PI*(0.15+0.7*i/8),x=60+27*Math.cos(a),y=52+22*Math.sin(a);return `<path d="M${x.toFixed(1)} ${y.toFixed(1)} L${(60+20*Math.cos(a)).toFixed(1)} ${(52+15*Math.sin(a)).toFixed(1)}" stroke="${DK}" stroke-width="1"/>`}).join("")}<text x="74" y="86" font-size="8" fill="${DK}">steep worked edge</text>`),
+flake:S(`<path d="M52 10 L68 10 L86 46 L78 74 L44 80 L30 50 Z" fill="${ST}" stroke="${DK}" stroke-width="1.5"/><path d="M52 10 L68 10 L66 14 L54 14 Z" fill="${ST2}"/><ellipse cx="60" cy="22" rx="8" ry="6" fill="none" stroke="${DK}" stroke-width="1"/>${[0,1,2,3].map(i=>`<path d="M${40-i*2} ${36+i*10} Q60 ${30+i*12} ${80+i} ${36+i*10}" fill="none" stroke="${DK}" stroke-width=".7" opacity=".55"/>`).join("")}<text x="72" y="12" font-size="8" fill="${DK}">platform</text><text x="2" y="26" font-size="8" fill="${DK}">bulb</text><path d="M20 24 L51 22" stroke="${DK}" stroke-width=".7"/>`),
+maul:S(`<ellipse cx="60" cy="46" rx="40" ry="28" fill="${SH}" stroke="${DK}" stroke-width="1.5"/><path d="M50 19 Q46 46 50 73 M62 18 Q58 46 62 74" stroke="${DK}" stroke-width="1.2" fill="none"/><path d="M50 19 Q56 18 62 18 Q58 46 62 74 Q56 74 50 73 Q46 46 50 19" fill="${DK}" opacity=".25"/><circle cx="96" cy="46" r="2" fill="${DK}"/><circle cx="92" cy="40" r="1.5" fill="${DK}"/><circle cx="93" cy="52" r="1.5" fill="${DK}"/><text x="66" y="88" font-size="8" fill="${DK}">pecked groove, battered end</text>`),
+pottery:S(`<path d="M18 22 Q60 8 102 20 L96 70 Q60 80 26 72 Z" fill="${RD}" opacity=".85" stroke="${DK}" stroke-width="1.5"/>${Array.from({length:14},(_,i)=>`<path d="M${26+i*5} 34 L${20+i*5} 70" stroke="${DK}" stroke-width=".8" opacity=".55"/>`).join("")}${Array.from({length:9},(_,i)=>`<circle cx="${30+i*8}" cy="${24-Math.sin(i/8*Math.PI)*3}" r="1.8" fill="${DK}"/>`).join("")}<path d="M22 30 Q60 18 99 29" stroke="${DK}" stroke-width="1" fill="none"/><text x="20" y="88" font-size="8" fill="${DK}">rim punctates, cord marks</text>`),
+fcr:S(`<path d="M14 50 L30 30 L52 34 L48 62 L22 66 Z" fill="#a8857a" stroke="${DK}" stroke-width="1.3"/><path d="M58 28 L84 20 L100 40 L80 56 L60 48 Z" fill="#b0907f" stroke="${DK}" stroke-width="1.3"/><path d="M56 60 L80 62 L86 80 L60 82 Z" fill="#9c7b70" stroke="${DK}" stroke-width="1.3"/><path d="M30 30 L36 48 L48 62 M84 20 L78 38 L80 56" stroke="${DK}" stroke-width=".8" fill="none"/><text x="4" y="86" font-size="8" fill="${DK}">sharp, angular, reddened</text>`),
+bone:S(`<path d="M12 40 Q20 30 34 34 L104 44 Q110 46 104 48 L34 56 Q20 60 12 50 Z" fill="${BN}" stroke="${DK}" stroke-width="1.5"/><path d="M40 40 L96 45 M40 50 L96 47" stroke="${DK}" stroke-width=".6" opacity=".5"/><text x="58" y="70" font-size="8" fill="${DK}">polished, ground to a point</text>`),
+beads:S(`${[[24,30,"#2f5f9e"],[48,28,"#2f5f9e"],[72,30,"#e9e4d8"],[96,30,"#a23b2c"],[36,58,"#e9e4d8"],[60,60,"#3d7a5b"],[84,58,"#2f5f9e"]].map(([x,y,c])=>`<ellipse cx="${x}" cy="${y}" rx="9" ry="7.5" fill="${c}" stroke="${DK}" stroke-width="1"/><ellipse cx="${x}" cy="${y}" rx="2.2" ry="2" fill="var(--panel)" stroke="${DK}" stroke-width=".6"/><ellipse cx="${x-3}" cy="${y-3}" rx="2" ry="1.2" fill="#fff" opacity=".6"/>`).join("")}<text x="22" y="86" font-size="8" fill="${DK}">small, glassy, centre hole</text>`),
+gunflint:S(`<path d="M30 26 L90 22 L94 64 L28 68 Z" fill="#c8a565" stroke="${DK}" stroke-width="1.5"/><path d="M30 26 L36 34 L86 31 L90 22 M36 34 L34 60 L28 68" stroke="${DK}" stroke-width="1" fill="none"/><path d="M40 62 L48 58 M56 62 L62 58 M70 62 L78 58" stroke="${DK}" stroke-width=".8"/><text x="22" y="84" font-size="8" fill="${DK}">square, honey or grey flint</text>`),
+pipe:S(`<rect x="10" y="38" width="70" height="12" rx="6" fill="#efeae0" stroke="${DK}" stroke-width="1.4"/><circle cx="12" cy="44" r="2" fill="${DK}"/><path d="M80 38 L96 18 Q108 18 108 30 L100 54 Q90 58 80 50 Z" fill="#efeae0" stroke="${DK}" stroke-width="1.4"/><ellipse cx="102" cy="22" rx="6" ry="3" fill="${DK}" opacity=".4"/><text x="10" y="72" font-size="8" fill="${DK}">white clay stem with a bore hole</text>`),
+cone:S(`<path d="M30 70 L56 14 L82 70 Z" fill="${CU}" stroke="${DK}" stroke-width="1.5"/><path d="M42 44 L70 44 M36 58 L76 58" stroke="${DK}" stroke-width=".8" opacity=".5"/><path d="M90 30 L112 26 L110 52 L92 56 Z" fill="${CU}" opacity=".8" stroke="${DK}" stroke-width="1.2"/><circle cx="96" cy="36" r="1.6" fill="${DK}"/><circle cx="104" cy="34" r="1.6" fill="${DK}"/><text x="18" y="86" font-size="8" fill="${DK}">rolled copper, rivet holes</text>`),
+brach:S(`<path d="M60 12 Q96 18 100 50 Q90 80 60 80 Q30 80 20 50 Q24 18 60 12 Z" fill="${ST}" stroke="${DK}" stroke-width="1.5"/>${Array.from({length:11},(_,i)=>{const a=Math.PI*(0.1+0.8*i/10);return `<path d="M60 16 L${(60+44*Math.cos(Math.PI-a)).toFixed(1)} ${(16+62*Math.sin(a)).toFixed(1)}" stroke="${DK}" stroke-width=".7" opacity=".6"/>`}).join("")}<path d="M54 16 Q60 6 66 16" fill="${ST2}" stroke="${DK}"/><text x="30" y="90" font-size="8" fill="${DK}">ribbed shell, two halves</text>`),
+coral:S(`<path d="M18 74 Q16 40 40 16 L54 22 Q36 44 36 76 Z" fill="${ST}" stroke="${DK}" stroke-width="1.5"/>${[24,34,44,54,64].map(y=>`<path d="M${22-y/20} ${y+6} Q${30} ${y+2} ${38-y/20} ${y+8}" stroke="${DK}" stroke-width=".7" fill="none" opacity=".6"/>`).join("")}<ellipse cx="47" cy="19" rx="8" ry="4" fill="${ST2}" stroke="${DK}"/>${[0,1,2,3,4,5].map(i=>`<ellipse cx="${70+(i%3)*14}" cy="${34+Math.floor(i/3)*20}" rx="6" ry="9" fill="none" stroke="${DK}" stroke-width="1.2"/>`).join("")}<text x="62" y="86" font-size="8" fill="${DK}">horn coral, chain coral</text>`),
+nautiloid:S(`<path d="M10 52 L104 30 Q112 36 106 44 L12 62 Z" fill="${ST}" stroke="${DK}" stroke-width="1.5"/>${Array.from({length:10},(_,i)=>`<path d="M${22+i*9} ${50-i*2.2} Q${25+i*9} ${55-i*2.2} ${22+i*9} ${60-i*2.3}" stroke="${DK}" stroke-width=".9" fill="none"/>`).join("")}<text x="14" y="80" font-size="8" fill="${DK}">straight cone with chamber lines</text>`),
+crinoid:S(`${Array.from({length:8},(_,i)=>`<rect x="${20+i*9}" y="32" width="8" height="24" rx="3" fill="${ST}" stroke="${DK}" stroke-width="1"/>`).join("")}<circle cx="98" cy="44" r="12" fill="${ST}" stroke="${DK}" stroke-width="1.3"/><circle cx="98" cy="44" r="2.5" fill="${DK}"/>${Array.from({length:10},(_,i)=>`<path d="M${98+4*Math.cos(i*Math.PI/5)} ${44+4*Math.sin(i*Math.PI/5)} L${98+11*Math.cos(i*Math.PI/5)} ${44+11*Math.sin(i*Math.PI/5)}" stroke="${DK}" stroke-width=".5"/>`).join("")}<text x="18" y="76" font-size="8" fill="${DK}">stacked discs, hole in centre</text>`),
+baculites:S(`<path d="M8 40 L110 32 L112 52 L10 60 Z" fill="#7d7468" stroke="${DK}" stroke-width="1.5"/>${[20,44,68,92].map(x=>`<path d="M${x} ${40-x/14} q3 4 0 6 q-3 3 0 6 q3 3 0 6" stroke="#e8e0cf" stroke-width="1.1" fill="none"/>`).join("")}<text x="8" y="78" font-size="8" fill="${DK}">straight shell, frilly suture lines</text>`),
+shark:S(`<path d="M60 10 L80 58 Q60 52 40 58 Z" fill="#4a4338" stroke="${DK}" stroke-width="1.3"/><path d="M36 58 Q60 50 84 58 L82 72 Q60 66 38 72 Z" fill="#8a7c66" stroke="${DK}" stroke-width="1.2"/><path d="M60 14 L60 52" stroke="#9a907f" stroke-width=".8"/><text x="22" y="86" font-size="8" fill="${DK}">glossy dark blade, rough root</text>`),
+vert:S(`<rect x="30" y="22" width="60" height="46" rx="10" fill="${BN}" stroke="${DK}" stroke-width="1.5"/><ellipse cx="30" cy="45" rx="8" ry="23" fill="#d8ccb0" stroke="${DK}" stroke-width="1.3"/><ellipse cx="30" cy="45" rx="3" ry="9" fill="${DK}" opacity=".3"/><path d="M44 28 L76 28 M44 62 L76 62" stroke="${DK}" stroke-width=".6" opacity=".5"/><text x="18" y="84" font-size="8" fill="${DK}">spool-shaped bone</text>`),
+concretion:S(`<ellipse cx="46" cy="46" rx="30" ry="26" fill="#9a7a58" stroke="${DK}" stroke-width="1.5"/><ellipse cx="38" cy="38" rx="10" ry="6" fill="#fff" opacity=".18"/><ellipse cx="94" cy="50" rx="16" ry="14" fill="#8a6c4c" stroke="${DK}" stroke-width="1.3"/><text x="16" y="86" font-size="8" fill="${DK}">smooth, round, no structure</text>`),
+};
+const ITEMS=[
+ {g:"stone",pic:"point",name:"Projectile point (arrowhead or dart point)",age:"About 10,000 to 200 years ago",ftype:"Stone tool or flake",
+  look:["Symmetrical, with a sharp tip and two cutting edges","Notches in the sides or base, or a stem, for tying it to a shaft","Small overlapping scars along the edges, from careful flaking","Often made of chert, including the local Swan River chert (creamy, pinkish, grey or orange, sometimes banded), or of quartzite"],
+  not:"Frost and plowing break chert into sharp pieces, but natural breaks don't make matching notches or even flaking along both edges."},
+ {g:"stone",pic:"scraper",name:"End scraper",age:"Thousands of years; common on bison-processing sites",ftype:"Stone tool or flake",
+  look:["Thumb-sized, often teardrop-shaped","One end has a steep, rounded working edge made of many tiny flake scars","Flat on the underside"],
+  not:"Natural pebbles are rounded all over and don't have a single steep, finely chipped edge."},
+ {g:"stone",pic:"flake",name:"Flakes (debitage)",age:"Any period with stone-tool making",ftype:"Stone tool or flake",
+  look:["Thin, sharp-edged piece of chert, quartzite or chalcedony","A small flat striking platform at one end","A swelling (bulb of percussion) just below it on the smooth inner face","Faint ripple rings spreading out from the bulb"],
+  not:"Flakes are by far the most common sign that people worked stone somewhere. A scatter of them can matter more than a single nice point, so report them too."},
+ {g:"stone",pic:"maul",name:"Grooved maul, hammerstone or ground stone",age:"Thousands of years",ftype:"Stone tool or flake",
+  look:["A fist- to head-sized cobble, usually granite or another hard rock","A pecked groove around the middle for a handle (mauls)","Battered, crushed ends from pounding","Smoothed, ground surfaces on axes and other ground tools"],
+  not:"Glacial cobbles are everywhere in Manitoba fields. Look for a deliberate groove or for battering concentrated on one end."},
+ {g:"stone",pic:"fcr",name:"Fire-cracked rock",age:"Any period",ftype:"Hearth, fire-cracked rock or charcoal layer",
+  look:["Angular, blocky fragments of cobbles","Reddened, greyed or crazed surfaces from heating","Often in clusters, sometimes with charcoal or burnt bone","Left by stone-boiling and hearths"],
+  not:"Frost also splits rock. A tight cluster of reddened, angular pieces, especially with charcoal, points to a hearth."},
+ {g:"clay",pic:"pottery",name:"Pottery sherds",age:"About 2,000 to 300 years ago",ftype:"Pottery",
+  look:["Thick, gritty, usually grey-brown to orange fired clay with crushed-rock temper","Textured outer surface: cord or fabric impressions","Rows of punched dots (punctates), notches or stamped designs near the rim","Local types include Laurel, Blackduck, Selkirk and Duck Bay wares"],
+  not:"Modern brick and flowerpot are smooth, evenly fired and lack the cord-marked texture."},
+ {g:"clay",pic:"bone",name:"Bone and antler tools",age:"Any period; survives best in alkaline soils",ftype:"Bone or antler (not human)",
+  look:["Awls, needles, beamers (hide scrapers) and harpoon parts","Ground or polished surfaces, especially at the tip","Cut marks, drilled eyes or notches","Burnt or broken animal bone, often bison, can also mark a camp"],
+  not:"Bones gnawed by animals have small pits and grooves but no polish or shaped point. If a bone could be human, stop and call the RCMP and the Branch."},
+ {g:"trade",pic:"beads",name:"Glass trade beads",age:"1700s to 1800s",ftype:"Trade goods (beads, metal, glass, gun parts)",
+  look:["Small (2–10 mm) glass beads with a hole through the middle","Common colours: navy and sky blue, white, red with a white or green core, black","Larger wound or faceted beads also occur"],
+  not:"Modern plastic beads are light and often have mould seams."},
+ {g:"trade",pic:"gunflint",name:"Gunflints",age:"Late 1600s to 1800s",ftype:"Trade goods (beads, metal, glass, gun parts)",
+  look:["Small square or wedge-shaped piece of flint, 2–3 cm","Honey-brown (French) or dark grey to black (English)","One edge chipped and battered from striking the frizzen of a flintlock"],
+  not:"Local chert flakes are irregular; gunflints are neatly squared."},
+ {g:"trade",pic:"pipe",name:"Clay pipe fragments",age:"1700s to 1800s",ftype:"Trade goods (beads, metal, glass, gun parts)",
+  look:["White or cream fired clay","Stems are thin tubes with a small bore hole through the centre","Bowl pieces may carry moulded marks or initials"],
+  not:"Porcelain insulators and modern ceramics are glazed and thicker."},
+ {g:"trade",pic:"cone",name:"Copper and brass pieces",age:"1700s to 1800s",ftype:"Trade goods (beads, metal, glass, gun parts)",
+  look:["Fragments of trade kettles, often with rivet holes","Small rolled cones (tinkling cones) from clothing and bags","Green corrosion on the surface","Also: musket balls (round lead shot), buttons, awls, knife blades"],
+  not:"Modern scrap usually has machine-stamped edges, screws or paint."},
+ {g:"fossil",pic:"brach",name:"Brachiopods (lamp shells)",age:"Devonian and Ordovician, about 450–380 million years",ftype:"Other / not sure",
+  look:["Clam-like shells made of two unequal halves","Ribs fanning out from a small beak","Common in limestone bedrock around Lake Winnipegosis and Lake Manitoba, and in limestone cobbles carried by glaciers"],
+  not:"Freshwater clam shells on lakeshores are thin, pearly and recent, not stone."},
+ {g:"fossil",pic:"coral",name:"Horn corals and colonial corals",age:"Devonian and Ordovician",ftype:"Other / not sure",
+  look:["Horn corals: a curved cone with radiating walls (septa) inside","Chain coral: rows of small oval tubes joined like links","Honeycomb and other colonial corals form heads with many small openings"],
+  not:"These are the same fossils you can see in Tyndall Stone walls in Winnipeg."},
+ {g:"fossil",pic:"nautiloid",name:"Straight-shelled nautiloids",age:"Ordovician to Devonian",ftype:"Other / not sure",
+  look:["A long, slowly tapering cone, from finger- to arm-length","Evenly spaced curved lines across it, marking internal chambers","Usually in limestone"],
+  not:"Not a bone: the chamber lines and the stone texture give it away."},
+ {g:"fossil",pic:"crinoid",name:"Crinoid stems",age:"Ordovician to Devonian",ftype:"Other / not sure",
+  look:["Small discs or short columns stacked like coins","A tiny hole or star through the centre","Often loose on limestone surfaces"],
+  not:"Sometimes mistaken for beads; crinoid discs are stone, not glass or shell."},
+ {g:"fossil",pic:"baculites",name:"Ammonites (including straight Baculites)",age:"Cretaceous, about 80 million years",ftype:"Other / not sure",
+  look:["Shell pieces in the grey-black Cretaceous shale of the escarpment","Straight Baculites pieces show frilly, leaf-like suture lines","Sometimes pearly or iridescent"],
+  not:"Shale breaks into flat flakes; an ammonite has a curved shell surface with sutures."},
+ {g:"fossil",pic:"shark",name:"Shark and fish teeth",age:"Cretaceous",ftype:"Other / not sure",
+  look:["Small (5–30 mm) glossy, dark triangular blades","A rougher, lighter root at the base","Fish scales and vertebrae also occur in the same shales"],
+  not:"Sharp chert flakes are matte, not enamel-glossy."},
+ {g:"fossil",pic:"vert",name:"Marine reptile bones",age:"Cretaceous; rare",ftype:"Other / not sure",
+  look:["Spool-shaped vertebrae, rib or paddle bones, much heavier than modern bone","Dark brown to black, mineralized","From the seaway that covered Manitoba, home to mosasaurs and plesiosaurs"],
+  not:"These are rare and scientifically important. Don't dig. Photograph it, note the spot and report it."},
+ {g:"fossil",pic:"concretion",name:"Look-alike: concretions and odd rocks",age:"Natural",ftype:"Other / not sure",
+  look:["Round or oval nodules that weather out of shale and clay","Smooth outside, sometimes with cracks inside","Often taken for eggs, bones or carved stones"],
+  not:"Concretions have no internal structure like bone cells, chambers or septa. Report it anyway if you're not sure."},
+];
+const GROUPS={all:"All",stone:"Stone tools",clay:"Pottery and bone",trade:"Fur-trade goods",fossil:"Fossils"};
+const grid=document.getElementById("wgrid"),chips=document.getElementById("wchips");let cur="all";
+function draw(){grid.innerHTML="";ITEMS.filter(it=>cur==="all"||it.g===cur).forEach(it=>{const c=document.createElement("article");c.className="card wcard";
+  c.innerHTML=`<div class="wpic">${PICS[it.pic]}</div><h3 class="wname">${it.name}</h3><p class="src" style="margin:0 0 6px">${it.age}</p><ul>${it.look.map(l=>`<li>${l}</li>`).join("")}</ul><p class="wnot"><b>Don't confuse with:</b> ${it.not}</p><button type="button" class="wrep">Found one? Report it</button>`;
+  c.querySelector(".wrep").onclick=()=>{const sel=document.getElementById("ftype");[...sel.options].forEach(o=>{if(o.text===it.ftype)sel.value=o.value||o.text});location.hash="found";window.scrollTo({top:0,behavior:"smooth"})};
+  grid.appendChild(c)})}
+for(const k in GROUPS){const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=GROUPS[k];b.setAttribute("aria-pressed",k===cur);
+  b.onclick=()=>{cur=k;chips.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));draw()};chips.appendChild(b)}
+draw();
 })();
 </script>
 </body>
